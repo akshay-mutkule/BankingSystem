@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.banking_api.entity.Transaction;
+import com.example.banking_api.entity.TransactionType;
 import com.example.banking_api.model.Account;
 import com.example.banking_api.repository.AccountRepository;
 import com.example.banking_api.repository.TransactionRepository;
@@ -37,7 +38,7 @@ public class AccountService {
 
         Transaction t = new Transaction();
         t.setAccountNumber(accNo);
-        t.setType("DEPOSIT");
+       t.setType(TransactionType.DEPOSIT);
         t.setAmount(amount);
      t.setDate(LocalDateTime.now());
 
@@ -56,7 +57,7 @@ public class AccountService {
 
         Transaction t = new Transaction();
         t.setAccountNumber(accNo);
-        t.setType("WITHDRAW");
+       t.setType(TransactionType.WITHDRAW);
         t.setAmount(amount);
     t.setDate(LocalDateTime.now());
 
@@ -84,14 +85,14 @@ public String transfer(int fromAcc, int toAcc, double amount) {
     // sender transaction
     Transaction t1 = new Transaction();
     t1.setAccountNumber(fromAcc);
-    t1.setType("TRANSFER_SENT");
+    t1.setType(TransactionType.TRANSFER);
     t1.setAmount(amount);
      t1.setDate(LocalDateTime.now());
 
     // receiver transaction
     Transaction t2 = new Transaction();
     t2.setAccountNumber(toAcc);
-    t2.setType("TRANSFER_RECEIVED");
+    t2.setType(TransactionType.TRANSFER);
     t2.setAmount(amount);
     t2.setDate(LocalDateTime.now());
 
@@ -110,7 +111,7 @@ public double getBalance(int accNo) {
 private void saveTransaction(int accNo, String type, double amount) {
     Transaction t = new Transaction();
     t.setAccountNumber(accNo);
-    t.setType(type);
+    t.setType(TransactionType.valueOf(type.toUpperCase()));
     t.setAmount(amount);
     t.setDate(java.time.LocalDateTime.now());
 

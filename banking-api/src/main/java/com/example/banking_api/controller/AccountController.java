@@ -2,6 +2,8 @@ package com.example.banking_api.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.banking_api.entity.Transaction;
 import com.example.banking_api.model.Account;
 import com.example.banking_api.service.AccountService;
+
 @RestController
 @RequestMapping("/account")
 @CrossOrigin(origins = "*")
@@ -32,8 +35,13 @@ public class AccountController {
         return "API working";
     }
     @PostMapping("/login")
-public Account login(@RequestParam int accNo, @RequestParam String pin) {
-    return service.login(accNo, pin);
+public ResponseEntity<Account> login(@RequestParam int accNo, @RequestParam String pin) {
+    Account account = service.login(accNo, pin);
+    if (account != null) {
+        return ResponseEntity.ok(account);
+    } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }
 @PostMapping("/deposit")
 public Account deposit(@RequestParam int accNo, @RequestParam double amount) {
